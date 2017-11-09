@@ -3,6 +3,7 @@ package kr.co.toywings.floatingbutton;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
@@ -373,7 +375,18 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             {
             height = getResources().getDimensionPixelSize(idStatusBarHeight);
             }
-        return height;
+
+//        Log.i("####", "getTitleBarHeight()"+determineTitleBarHeight());
+
+        return height + determineTitleBarHeight();
+        }
+
+    private int determineTitleBarHeight()
+        {
+        Window window = ((Activity) getContext()).getWindow();
+        Rect windowRect = new Rect();
+        window.getDecorView().getWindowVisibleDisplayFrame(windowRect);
+        return windowRect.top;
         }
 
     @Override
