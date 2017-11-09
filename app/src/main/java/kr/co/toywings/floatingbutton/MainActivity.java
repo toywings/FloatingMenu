@@ -1,12 +1,12 @@
 package kr.co.toywings.floatingbutton;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends Activity
     {
 
     private V_FloatingMenu fm;

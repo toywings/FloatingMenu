@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -60,14 +58,14 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         init();
         }
 
-    public V_FloatingMenu(Context context, @Nullable AttributeSet attrs)
+    public V_FloatingMenu(Context context, AttributeSet attrs)
         {
         super(context, attrs);
         CONTEXT = context;
         init();
         }
 
-    public V_FloatingMenu(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
+    public V_FloatingMenu(Context context, AttributeSet attrs, int defStyleAttr)
         {
         super(context, attrs, defStyleAttr);
         CONTEXT = context;
@@ -312,7 +310,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 Data data = buttons.get(i);
                 // 아이콘
                 icons[i] = new ImageView(CONTEXT);
-                ViewCompat.setTranslationZ(icons[i], buttons.size()-i);
+//                ViewCompat.setTranslationZ(icons[i], buttons.size()-i);
                 icons[i].setImageResource(data.IMAGE);
 
                 RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
@@ -326,7 +324,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
                 // 라벨
                 labels[i] = new TextView(CONTEXT);
-                ViewCompat.setTranslationZ(labels[i], buttons.size()-i);
+//                ViewCompat.setTranslationZ(labels[i], buttons.size()-i);
                 labels[i].setText(data.NAME);
                 labels[i].setTextColor(Color.WHITE);
                 labels[i].measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
