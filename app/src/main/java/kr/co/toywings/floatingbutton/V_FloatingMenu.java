@@ -367,7 +367,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     public boolean onTouch(View view, MotionEvent motionEvent)
         {
         if(START_BUTTON.isChecked()) START_BUTTON.performClick();
-        return false;
+        return true;
         }
 
     public boolean isOpened()
@@ -378,5 +378,10 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     public void clickStart()
         {
         START_BUTTON.performClick();
+        }
+
+    public void clearTopIcon()
+        {
+        removeView(TOP);
         }
     }
