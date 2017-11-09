@@ -140,7 +140,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
     private void setListeners()
         {
-        setOnTouchListener(this);
+//        setOnTouchListener(this);
 
         START_BUTTON.setOnClickListener(new OnClickListener()
             {
@@ -221,6 +221,14 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 return false;
                 }
             });
+
+        DIM.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View view)
+            {
+            if(START_BUTTON.isChecked()) START_BUTTON.performClick();
+            }
+        });
         }
 
     Handler show_top_button = new Handler()
@@ -365,8 +373,8 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent)
         {
-        if(START_BUTTON.isChecked()) START_BUTTON.performClick();
-        return true;
+
+        return false;
         }
 
     public boolean isOpened()
