@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     private int START_BUTTON_WIDTH;
     private int START_BUTTON_HEIGHT;
     private ArrayList<Data> buttons;
-    private ImageView TOP_ICON;
+    private ImageView TOP;
     private int TOP_ICON_WIDTH;
     private int TOP_ICON_HEIGHT;
     private long TIME;
@@ -84,7 +85,6 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         setListeners();
         addView(DIM);
         addView(START_BUTTON);
-        addView(TOP_ICON);
         invalidate();
         }
 
@@ -110,33 +110,32 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         START_BUTTON.setImageResource(R.drawable.floating_home);
         START_BUTTON.setLayoutParams(params_start);
 
-        TOP_ICON = new ImageView(CONTEXT);
-        TOP_ICON.setImageResource(R.drawable.ic_floating_home);
-
         START_BUTTON.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         DIM.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        TOP_ICON.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         START_BUTTON_WIDTH = START_BUTTON.getMeasuredWidth();
         START_BUTTON_HEIGHT = START_BUTTON.getMeasuredHeight();
-        TOP_ICON_WIDTH = TOP_ICON.getMeasuredWidth();
-        TOP_ICON_HEIGHT = TOP_ICON.getMeasuredHeight();
 
         gapX = (START_BUTTON_WIDTH-params_dim.width)/2;
         gapY = (START_BUTTON_HEIGHT-params_dim.height)/2;
         params_dim.rightMargin = MARGIN + gapX;
         params_dim.bottomMargin = MARGIN + gapY;
+        }
 
+    public void setButtons(ArrayList<Data> list, ImageView Top)
+        {
+        buttons = list;
+        TOP = Top;
 
+        TOP.setImageResource(R.drawable.ic_floating_home);
+        TOP.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        TOP_ICON_WIDTH = TOP.getMeasuredWidth();
+        TOP_ICON_HEIGHT = TOP.getMeasuredHeight();
         RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
         param_icon.rightMargin = MARGIN + ((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
         param_icon.bottomMargin = MARGIN + START_BUTTON_HEIGHT + gap;
-        TOP_ICON.setLayoutParams(param_icon);
-        }
-
-    public void setButtons(ArrayList<Data> list)
-        {
-        buttons = list;
+        TOP.setLayoutParams(param_icon);
+        addView(TOP);
         }
 
     private void setListeners()
@@ -148,6 +147,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             @Override
             public void onClick(View view)
                 {
+                if(buttons==null||buttons.size()==0) Toast.makeText(CONTEXT, "리스트가 없습니다.", Toast.LENGTH_SHORT).show();
                 START_BUTTON.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                     {
@@ -163,7 +163,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                     {
                     vpa.rotation(ANGLE); // 한번돌아간 상태면 안돌림 By는 현재상태에서 돌림
                     vpa.setInterpolator(new AnticipateInterpolator());
-                    removeView(TOP_ICON);
+                    removeView(TOP);
                     START_BUTTON.setAlpha(0f);
                     START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
                     START_BUTTON.animate().alpha(1f).setDuration(300).start();
@@ -205,7 +205,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                         if(y<top) y=top;  // Top      Limit
                         if(x>right) x=right;    // Right    Limit
                         if(y>bottom) y=bottom;  // Bottom   Limit
-                        TOP_ICON.animate().x(x+((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2)).y(y-gap-TOP_ICON_HEIGHT).setDuration(0).start();
+                        TOP.animate().x(x+((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2)).y(y-gap-TOP_ICON_HEIGHT).setDuration(0).start();
                         view.animate().x(x).y(y).setDuration(0).start();
                         DIM.animate().x(x+gapX).y(y+gapY).setDuration(0).start();
                         break;
@@ -221,15 +221,6 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 return false;
                 }
             });
-
-//        START_BUTTON.setOnCheckedChangeListener(new V_CheckImageView.OnCheckedChangeListener()
-//            {
-//            @Override
-//            public void onCheckedChanged(View checkableView, boolean isChecked)
-//                {
-//
-//                }
-//            });
         }
 
     Handler show_top_button = new Handler()
@@ -242,8 +233,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             if(START_BUTTON.isChecked())
                 {
                 Log.i("####", "탑버튼 없애기");
-                removeView(TOP_ICON);
-//                removeView(topl);
+                removeView(TOP);
                 }
             else{
                 Log.i("####", "탑버튼 나오기");
@@ -251,16 +241,14 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 START_BUTTON.getLocationOnScreen(location);
                 int start_button_margin_x = SCREEN_WIDTH - (location[0] + START_BUTTON_WIDTH);
                 int start_button_margin_y = SCREEN_HEIGHT + getStatusBarHeight() - location[1];
-                TOP_ICON = new ImageView(CONTEXT);
-                TOP_ICON.setImageResource(R.drawable.ic_floating_home);
 
                 RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
                 param_icon.rightMargin = start_button_margin_x + ((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2);
                 param_icon.bottomMargin = gap + start_button_margin_y;
-                TOP_ICON.setLayoutParams(param_icon);
-                addView(TOP_ICON);
+                TOP.setLayoutParams(param_icon);
+                addView(TOP);
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
-                TOP_ICON.startAnimation(anim_show);
+                TOP.startAnimation(anim_show);
 
 //                topl = new TextView(CONTEXT);
 //                topl.setText("Top");
@@ -286,7 +274,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
 
     TextView topl;
-    ImageView []icons;
+//    ImageView []icons;
     TextView []labels;
     private void showButtons(boolean isShow)
         {
@@ -302,29 +290,26 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             int start_button_margin_x = MARGIN;
             int start_button_margin_y = MARGIN;
 
-            icons = new ImageView[buttons.size()];
+//            icons = new ImageView[buttons.size()];
             labels = new TextView[buttons.size()];
 
             for(int i=0;i<buttons.size();i++)
                 {
                 Data data = buttons.get(i);
                 // 아이콘
-                icons[i] = new ImageView(CONTEXT);
-//                ViewCompat.setTranslationZ(icons[i], buttons.size()-i);
-                icons[i].setImageResource(data.IMAGE);
+                data.BUTTON.setImageResource(data.IMAGE);
 
                 RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
                 param_icon.rightMargin = start_button_margin_x + ((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2);
                 param_icon.bottomMargin = start_button_margin_y + gap + START_BUTTON_HEIGHT + ((TOP_ICON_HEIGHT+gap) * i);
-                icons[i].setLayoutParams(param_icon);
-                addView(icons[i]);
+                data.BUTTON.setLayoutParams(param_icon);
+                addView(data.BUTTON);
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
                 anim_show.setStartOffset(70*i);
-                icons[i].startAnimation(anim_show);
+                data.BUTTON.startAnimation(anim_show);
 
                 // 라벨
                 labels[i] = new TextView(CONTEXT);
-//                ViewCompat.setTranslationZ(labels[i], buttons.size()-i);
                 labels[i].setText(data.NAME);
                 labels[i].setTextColor(Color.WHITE);
                 labels[i].measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -339,9 +324,9 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             DIM.animate().scaleX(80f).scaleY(80f).alpha(1f).setDuration(DURATION).start();
             }
         else{
-            for(int i=0;i<icons.length;i++)
+            for(int i=0;i<buttons.size();i++)
                 {
-                final int reverse = icons.length-1-i;
+                final int reverse = buttons.size()-1-i;
                 Animation anim_hide = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_hide);
                 anim_hide.setStartOffset(70*i);
                 anim_hide.setAnimationListener(new Animation.AnimationListener()
@@ -351,12 +336,12 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                     @Override
                     public void onAnimationEnd(Animation animation)
                         {
-                        removeView(icons[reverse]);
+                        removeView(buttons.get(reverse).BUTTON);
                         }
                     @Override
                     public void onAnimationRepeat(Animation animation) {}
                     });
-                icons[reverse].startAnimation(anim_hide);
+                buttons.get(reverse).BUTTON.startAnimation(anim_hide);
                 removeView(labels[reverse]);
                 }
             DIM.animate().scaleX(1f).scaleY(1f).alpha(0f).setDuration(DURATION).start();
