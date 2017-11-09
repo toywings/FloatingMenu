@@ -127,7 +127,8 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         buttons = list;
         TOP = Top;
 
-        TOP.setImageResource(R.drawable.ic_floating_home);
+        if(START_BUTTON.isChecked()) START_BUTTON.performClick();
+
         TOP.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         TOP_ICON_WIDTH = TOP.getMeasuredWidth();
         TOP_ICON_HEIGHT = TOP.getMeasuredHeight();
