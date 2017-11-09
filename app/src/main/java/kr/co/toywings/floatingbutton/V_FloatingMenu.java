@@ -30,27 +30,26 @@ import java.util.ArrayList;
 
 public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListener
     {
-    private Context CONTEXT;
-    private ImageView DIM;
-    private V_CheckImageView START_BUTTON;
-
-    private int SCREEN_WIDTH;
-    private int SCREEN_HEIGHT;
-    private final int MARGIN = 50;      // 버튼 바깥여백
-    private final int BOUNDARY = 5;     // 터치,클릭 구분 범위
-    private final float ANGLE = 135f;   // 버튼회전각도
-    private final int DURATION = 500;   // 버튼회전시간
-    private float dX, dY;
-    private float rawX, rawY;
-    private int gapX, gapY;
-    private int gap;
-    private int START_BUTTON_WIDTH;
-    private int START_BUTTON_HEIGHT;
-    private ArrayList<Data> buttons;
-    private ImageView TOP;
-    private int TOP_ICON_WIDTH;
-    private int TOP_ICON_HEIGHT;
-    private long TIME;
+    public Context CONTEXT;
+    public ImageView DIM;
+    public V_CheckImageView START_BUTTON;
+    public int SCREEN_WIDTH;
+    public int SCREEN_HEIGHT;
+    public final int MARGIN = 50;      // 버튼 바깥여백
+    public final int BOUNDARY = 5;     // 터치,클릭 구분 범위
+    public final float ANGLE = 135f;   // 버튼회전각도
+    public final int DURATION = 500;   // 버튼회전시간
+    public float dX, dY;
+    public float rawX, rawY;
+    public int gapX, gapY;
+    public int gap;
+    public int START_BUTTON_WIDTH;
+    public int START_BUTTON_HEIGHT;
+    public ArrayList<Data> buttons;
+    public ImageView TOP;
+    public int TOP_ICON_WIDTH;
+    public int TOP_ICON_HEIGHT;
+    public long TIME;
 
     public V_FloatingMenu(Context context)
         {
