@@ -294,7 +294,13 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 {
                 Data data = buttons.get(i);
                 // 아이콘
-                data.BUTTON.setImageResource(data.IMAGE);
+                if(data.ICON==null)
+                    {
+                    data.BUTTON.setImageResource(data.IMAGE);
+                    }
+                else{
+                    data.BUTTON.setImageBitmap(data.ICON);
+                    }
 
                 RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
                 param_icon.rightMargin = start_button_margin_x + ((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2);

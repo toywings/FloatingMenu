@@ -1,5 +1,6 @@
 package kr.co.toywings.floatingbutton;
 
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 /**
@@ -13,4 +14,5 @@ public class Data
     public String CODE;
     public int IMAGE;
     public ImageView BUTTON;
+    public Bitmap ICON;
     }
