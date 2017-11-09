@@ -91,6 +91,7 @@ public class MainActivity extends Activity
 
         Collections.reverse(list);
         ImageView top = new ImageView(this);
+        top.setImageResource(R.drawable.ic_floating_home);
         top.setOnClickListener(new View.OnClickListener()
             {
             @Override
