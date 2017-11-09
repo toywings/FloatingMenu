@@ -169,7 +169,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                     vpa.setInterpolator(new AnticipateInterpolator());
                     removeView(TOP_ICON);
                     START_BUTTON.setAlpha(0f);
-                    START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
+                    START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN-determineTitleBarHeight()).setDuration(0).start();
                     START_BUTTON.animate().alpha(1f).setDuration(300).start();
                     }
                 else{
