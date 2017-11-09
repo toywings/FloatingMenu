@@ -237,16 +237,13 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 }
             else{
                 Log.i("####", "탑버튼 나오기");
-                int[] location = new int[2];
-                START_BUTTON.getLocationOnScreen(location);
-                int start_button_margin_x = SCREEN_WIDTH - (location[0] + START_BUTTON_WIDTH);
-                int start_button_margin_y = SCREEN_HEIGHT + getStatusBarHeight() - location[1];
+                TOP.animate()
+                        .x(SCREEN_WIDTH-MARGIN-TOP_ICON_WIDTH-((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
+                        .y(SCREEN_HEIGHT-MARGIN-TOP_ICON_WIDTH-START_BUTTON_HEIGHT-gap)
+                        .setDuration(0).start();
 
-                RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
-                param_icon.rightMargin = start_button_margin_x + ((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2);
-                param_icon.bottomMargin = gap + start_button_margin_y;
-                TOP.setLayoutParams(param_icon);
                 addView(TOP);
+                TOP.invalidate();
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
                 TOP.startAnimation(anim_show);
 
