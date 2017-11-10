@@ -402,6 +402,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         addView(TOP);
         START_BUTTON.setVisibility(View.VISIBLE);
         START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
+        START_BUTTON.invalidate();
         }
 
     }
