@@ -249,7 +249,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                         .x(SCREEN_WIDTH-MARGIN-TOP_ICON_WIDTH-((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
                         .y(SCREEN_HEIGHT-MARGIN-TOP_ICON_WIDTH-START_BUTTON_HEIGHT-gap)
                         .setDuration(0).start();
-
+                removeView(TOP);
                 addView(TOP);
                 TOP.invalidate();
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
