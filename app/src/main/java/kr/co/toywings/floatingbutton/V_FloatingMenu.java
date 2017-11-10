@@ -394,6 +394,13 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
     public void resetLocation()
         {
+        removeView(TOP);
+        RelativeLayout.LayoutParams param_icon = getLayoutParamRightBottom();
+        param_icon.rightMargin = MARGIN + ((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
+        param_icon.bottomMargin = MARGIN + START_BUTTON_HEIGHT + gap;
+        TOP.setLayoutParams(param_icon);
+        addView(TOP);
+        START_BUTTON.setVisibility(View.VISIBLE);
         START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
         }
 
