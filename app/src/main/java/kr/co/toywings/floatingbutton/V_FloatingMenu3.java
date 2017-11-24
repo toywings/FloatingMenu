@@ -1,6 +1,5 @@
 package kr.co.toywings.floatingbutton;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,7 +10,6 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -31,15 +29,12 @@ import java.util.ArrayList;
  * Created by schneider on 2017. 11. 6..
  */
 
-public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListener
+public class V_FloatingMenu3 extends RelativeLayout implements View.OnTouchListener
     {
     public Context CONTEXT;
-    public ArrayList<Data> buttons;
-
+    public RelativeLayout DIM2;
     public ImageView DIM;
     public V_CheckImageView START_BUTTON;
-    public ImageView TOP;
-
     public int SCREEN_WIDTH;
     public int SCREEN_HEIGHT;
     public final int MARGIN = 50;      // 버튼 바깥여백
@@ -52,29 +47,31 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     public int gap;
     public int START_BUTTON_WIDTH;
     public int START_BUTTON_HEIGHT;
+    public ArrayList<Data> buttons;
+    public ImageView TOP;
     public int TOP_ICON_WIDTH;
     public int TOP_ICON_HEIGHT;
-    public int NAVIGATION_BAR_HEIGHT;
-    public int 스타트버튼_X좌표;
-    public int 스타트버튼_Y좌표;
-    public int 탑버튼_X좌표;
-    public int 탑버튼_Y좌표;
+    public long TIME;
 
-    public V_FloatingMenu(Context context)
+    public boolean IS_NAVIGATION_VISIBLE;
+    public int NAVIGATION_BAR_HEIGHT;
+//    public int BOTTOM_HEIGHT;
+
+    public V_FloatingMenu3(Context context)
         {
         super(context);
         CONTEXT = context;
         init();
         }
 
-    public V_FloatingMenu(Context context, AttributeSet attrs)
+    public V_FloatingMenu3(Context context, AttributeSet attrs)
         {
         super(context, attrs);
         CONTEXT = context;
         init();
         }
 
-    public V_FloatingMenu(Context context, AttributeSet attrs, int defStyleAttr)
+    public V_FloatingMenu3(Context context, AttributeSet attrs, int defStyleAttr)
         {
         super(context, attrs, defStyleAttr);
         CONTEXT = context;
@@ -90,8 +87,10 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         gap = (int)getResources().getDimension(R.dimen.dp10);
 
         initViews();
-
-
+        setListeners();
+        addView(DIM);
+        addView(DIM2);
+        invalidate();
         }
 
     private void initViews()
@@ -103,6 +102,11 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         LayoutParams params_dim = getLayoutParamRightBottom();
         params_dim.width = 100;
         params_dim.height = 100;
+
+        LayoutParams param = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        DIM2 = new RelativeLayout(CONTEXT);
+        DIM2.setBackgroundColor(Color.parseColor("#b3000000"));
+        DIM2.setLayoutParams(param);
 
         GradientDrawable gd = new GradientDrawable();
         gd.setShape(GradientDrawable.OVAL);
@@ -131,11 +135,52 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0)
             {
-            NAVIGATION_BAR_HEIGHT = resources.getDimensionPixelSize(resourceId);
-            Log.i("####", "네비게이션바 높이 : "+NAVIGATION_BAR_HEIGHT);
+            NAVIGATION_BAR_HEIGHT += resources.getDimensionPixelSize(resourceId);
             }
 
+        slow.sendEmptyMessageDelayed(0, 1000);
         }
+
+    Handler slow = new Handler()
+        {
+        @Override
+        public void handleMessage(Message msg)
+            {
+            super.handleMessage(msg);
+            int uiOptions = ((Activity)CONTEXT).getWindow().getDecorView().getSystemUiVisibility();
+            int newUiOptions = uiOptions;
+            newUiOptions ^= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_LOW_PROFILE;
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE;
+//            public static final int STATUS_BAR_VISIBLE = 0;
+//            public static final int SYSTEM_UI_FLAG_FULLSCREEN = 4;
+//            public static final int SYSTEM_UI_FLAG_HIDE_NAVIGATION = 2;
+//            public static final int SYSTEM_UI_FLAG_IMMERSIVE = 2048;
+//            public static final int SYSTEM_UI_FLAG_IMMERSIVE_STICKY = 4096;
+//            public static final int SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN = 1024;
+//            public static final int SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION = 512;
+//            public static final int SYSTEM_UI_FLAG_LAYOUT_STABLE = 256;
+//            public static final int SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR = 16;
+//            public static final int SYSTEM_UI_FLAG_LIGHT_STATUS_BAR = 8192;
+//            public static final int SYSTEM_UI_FLAG_LOW_PROFILE = 1;
+//            public static final int SYSTEM_UI_FLAG_VISIBLE = 0;
+//            public static final int SYSTEM_UI_LAYOUT_FLAGS = 1536;
+
+            ((Activity)CONTEXT).getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+            int navi = ((Activity)CONTEXT).getWindow().getDecorView().getSystemUiVisibility();
+            IS_NAVIGATION_VISIBLE = (navi==View.SYSTEM_UI_FLAG_LOW_PROFILE)?true:false;
+            if(IS_NAVIGATION_VISIBLE)
+                {
+                Toast.makeText(CONTEXT, "네비없음", Toast.LENGTH_SHORT).show();
+                Log.i("####", "네비없음");
+                }
+            else{
+                Toast.makeText(CONTEXT, "네비나옴", Toast.LENGTH_SHORT).show();
+                Log.i("####", "네비나옴");
+                }
+            }
+        };
 
     public void setButtons(ArrayList<Data> list, ImageView Top)
         {
@@ -147,41 +192,34 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
         int top_width = (int)getResources().getDimension(R.dimen.dp40);
         int top_height = (int)getResources().getDimension(R.dimen.dp40);
-        LayoutParams param_icon = getRelativeLayoutParam();
+//        BOTTOM_HEIGHT = 0;
+        LayoutParams param_icon = getLayoutParamRightBottom();
+        param_icon.rightMargin = MARGIN + ((START_BUTTON_WIDTH-top_width)/2);
+        param_icon.bottomMargin = START_BUTTON_HEIGHT + gap + MARGIN;
         param_icon.width = top_width;
         param_icon.height = top_height;
         TOP.setLayoutParams(param_icon);
 
         TOP_ICON_WIDTH = top_width;
         TOP_ICON_HEIGHT = top_height;
+//        RelativeLayout.LayoutParams params_start = getLayoutParamRightBottom();
+//        params_start.rightMargin = MARGIN;
+//        params_start.bottomMargin = MARGIN;
         START_BUTTON = new V_CheckImageView(CONTEXT);
         START_BUTTON.setImageResource(R.drawable.floating_home);
+//        START_BUTTON.setLayoutParams(params_start);
 
-        addView(DIM);
-        addView(TOP);
-        addView(START_BUTTON);
-        스타트버튼_X좌표 = SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN;
-//        스타트버튼_Y좌표 = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN-NAVIGATION_BAR_HEIGHT;
-        스타트버튼_Y좌표 = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN;
-        START_BUTTON.animate().x(스타트버튼_X좌표).y(스타트버튼_Y좌표).setDuration(0).start();
-        탑버튼_X좌표 = 스타트버튼_X좌표+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
-        탑버튼_Y좌표 = 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap;
+        if(START_BUTTON.isChecked())
+            {
+            START_BUTTON.performClick();
+            }
+        else{
+            addView(TOP);
+            addView(START_BUTTON);
 
-//        TOP.animate().x(탑버튼_X좌표).y(스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap).setDuration(0).start();
-
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", 탑버튼_X좌표);
-        ObjectAnimator translateY = ObjectAnimator.ofFloat(TOP, "translationY", 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap);
-        translateX.setDuration(0);
-        translateY.setDuration(0);
-        translateX.start();
-        translateY.start();
-
-        setListeners();
-        }
-
-    private LayoutParams getRelativeLayoutParam()
-        {
-        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
+            setListeners();
+            }
         }
 
     private void setListeners()
@@ -292,42 +330,39 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             @Override
             public void onSystemUiVisibilityChange(int visibility)
                 {
-//                RelativeLayout.LayoutParams param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//                setLayoutParams(param);
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//                SCREEN_HEIGHT = displayMetrics.heightPixels - getStatusBarHeight();
-//
-////                TOP.animate().x(x+((START_BUTTON_WIDTH - TOP_ICON_WIDTH)/2)).y(y-gap-TOP_ICON_HEIGHT).setDuration(0).start();
-//                START_BUTTON.animate().x(SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN).y(SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN).setDuration(0).start();
-//
-//
-//                if (visibility == View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-//                    {
-//                    // 네비게이션바 투명
-//                    BOTTOM_HEIGHT = 0;
-//                    }
-//                else if (visibility == View.SYSTEM_UI_FLAG_VISIBLE)
-//                    {
-//                    // 네비게이션바 보이기
-//                    BOTTOM_HEIGHT = NAVIGATION_BAR_HEIGHT;
-//                    }
-//
-//                // 스타트버튼 및 버튼들 위치 리프레쉬
+                int[] location = new int[2];
+                START_BUTTON.getLocationOnScreen(location);
+                TOP.animate()
+                        .x(location[0]+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
+                        .y(location[1]-(START_BUTTON_WIDTH/2)-gap-TOP_ICON_WIDTH)
+                        .setDuration(0).start();
 
-//                TOP.animate()
-//                    .x(SCREEN_WIDTH-MARGIN-TOP_ICON_WIDTH-((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
-//                    .y(SCREEN_HEIGHT-MARGIN-TOP_ICON_WIDTH-START_BUTTON_HEIGHT-gap)
-//                    .setDuration(0).start();
-
-//                int[] location = new int[2];
-//                START_BUTTON.getLocationOnScreen(location);
-//                TOP.animate()
-//                        .x(location[0]+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
-//                        .y(location[1]-(START_BUTTON_WIDTH/2)-gap-TOP_ICON_WIDTH)
-//                        .setDuration(0).start();
-//                TOP.bringToFront();
-
+                for(int i=0;i<buttons.size();i++)
+                    {
+                    Data data = buttons.get(i);
+                    LayoutParams param = (LayoutParams)data.BUTTON.getLayoutParams();
+                    if(labels==null||labels[i]==null) continue;
+                    LayoutParams lparam = (LayoutParams)labels[i].getLayoutParams();
+                    if(param==null||lparam==null) continue;
+                    if (visibility == View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+                        {
+                        IS_NAVIGATION_VISIBLE = false;
+                        Log.i("####", "하이드");
+                        int a = NAVIGATION_BAR_HEIGHT + START_BUTTON_HEIGHT + gap + MARGIN + ((TOP_ICON_HEIGHT+gap) * i);
+                        param.bottomMargin = a;
+                        lparam.bottomMargin = a + ((TOP_ICON_HEIGHT-labels[i].getMeasuredHeight())/2);
+                        }
+                    else if (visibility == View.SYSTEM_UI_FLAG_VISIBLE)
+                        {
+                        Log.i("####", "비지블");
+                        IS_NAVIGATION_VISIBLE = true;
+                        int a = START_BUTTON_HEIGHT + gap + MARGIN + ((TOP_ICON_HEIGHT+gap) * i);
+                        param.bottomMargin = a;
+                        lparam.bottomMargin = a + (int)getResources().getDimension(R.dimen.dp10);
+                        }
+                    labels[i].setLayoutParams(lparam);
+                    data.BUTTON.invalidate();
+                    }
                 }
             });
         }
@@ -346,12 +381,28 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
             else{
                 removeView(TOP);
                 addView(TOP);
+
                 int[] location = new int[2];
                 START_BUTTON.getLocationOnScreen(location);
-                TOP.animate()
-                        .x(location[0]+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
-                        .y(location[1]-(START_BUTTON_WIDTH/2)-gap-TOP_ICON_WIDTH)
-                        .setDuration(0).start();
+                int posiy = location[1]-(START_BUTTON_WIDTH/2)-gap-TOP_ICON_WIDTH;
+
+                if(IS_NAVIGATION_VISIBLE)
+                    {
+                    TOP.animate()
+                            .x(location[0]+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
+                            .y(posiy+NAVIGATION_BAR_HEIGHT)
+                            .setDuration(0).start();
+                    }
+                else{
+                    TOP.animate()
+                            .x(location[0]+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2))
+                            .y(posiy-NAVIGATION_BAR_HEIGHT)
+                            .setDuration(0).start();
+                    }
+
+
+                Log.i("####", posiy+"좌표");
+
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
                 TOP.startAnimation(anim_show);
 
@@ -365,7 +416,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 //                topl.setLayoutParams(param_label);
 //                addView(topl);
 //                topl.startAnimation(anim_show);
-                }
+            }
             }
         };
 
@@ -376,12 +427,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         param_icon.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         return param_icon;
         }
-    private LayoutParams getLayoutParamRight()
-        {
-        LayoutParams param_icon = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        param_icon.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        return param_icon;
-        }
+
 
     TextView topl;
     TextView[]labels;
@@ -413,28 +459,39 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
                 param_icon.width = (int)getResources().getDimension(R.dimen.dp40);
                 param_icon.height = (int)getResources().getDimension(R.dimen.dp40);
+                param_icon.rightMargin = MARGIN + ((START_BUTTON_WIDTH - param_icon.width)/2);
 
+//                param_icon.bottomMargin = NAVIGATION_BAR_HEIGHT + start_button_margin_y + gap + START_BUTTON_HEIGHT + ((TOP_ICON_HEIGHT+gap) * i);
+//                if(C.MAIN.NOW_FRAGMENT == MainActivity.FN.WEBVIEW) param_icon.bottomMargin = start_button_margin_y + gap + START_BUTTON_HEIGHT + ((TOP_ICON_HEIGHT+gap) * i);
+//                else param_icon.bottomMargin = NAVIGATION_BAR_HEIGHT + start_button_margin_y + gap + START_BUTTON_HEIGHT + ((TOP_ICON_HEIGHT+gap) * i);
 
+                if(IS_NAVIGATION_VISIBLE)
+                    {
+                    Log.i("####", "네비있음ㅁ");
+                    param_icon.bottomMargin = START_BUTTON_HEIGHT + gap + MARGIN + ((TOP_ICON_HEIGHT+gap) * i);
+                    }
+                else{
+                    Log.i("####", "네비없음ㅁ");
+                    param_icon.bottomMargin = NAVIGATION_BAR_HEIGHT + START_BUTTON_HEIGHT + gap + MARGIN + ((TOP_ICON_HEIGHT+gap) * i);
+                    }
+
+                data.BUTTON.setLayoutParams(param_icon);
                 data.BUTTON.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 addView(data.BUTTON);
-//                data.BUTTON.animate().x(탑버튼_X좌표).y(SCREEN_HEIGHT-(스타트버튼_Y좌표 + ((TOP_ICON_HEIGHT+gap) * i))).setDuration(0).start();
-                Log.i("####", "#### 스크린 하이트 : "+(START_BUTTON_HEIGHT+MARGIN));
-                data.BUTTON.animate().x(탑버튼_X좌표).y(SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
                 anim_show.setStartOffset(70*i);
                 data.BUTTON.startAnimation(anim_show);
 
                 // 라벨
                 labels[i] = new TextView(CONTEXT);
-                labels[i].setText(data.NAME+"  ");
+                labels[i].setText(data.NAME);
                 labels[i].setTextColor(Color.WHITE);
                 labels[i].measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-                int ditance = (int)getResources().getDimension(R.dimen.dp150);
-                LayoutParams param_label = new LayoutParams(ditance, LayoutParams.WRAP_CONTENT);
-                labels[i].setGravity(Gravity.RIGHT);
+                LayoutParams param_label = getLayoutParamRightBottom();
+                param_label.rightMargin = param_icon.rightMargin + TOP_ICON_WIDTH + gap;
+                param_label.bottomMargin = param_icon.bottomMargin + ((TOP_ICON_HEIGHT-labels[i].getMeasuredHeight())/2);
                 labels[i].setLayoutParams(param_label);
                 addView(labels[i]);
-                labels[i].animate().x(탑버튼_X좌표-ditance).y(((TOP_ICON_HEIGHT-labels[i].getMeasuredHeight())/2)+SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
                 labels[i].startAnimation(anim_show);
                 }
 

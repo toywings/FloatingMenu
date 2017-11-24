@@ -20,7 +20,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fm = (V_FloatingMenu)findViewById(R.id.fm);
+        fm = findViewById(R.id.fm);
 
         ArrayList<Data> list = new ArrayList<>();
         Data data = new Data();
@@ -100,6 +100,7 @@ public class MainActivity extends Activity
                 Toast.makeText(MainActivity.this, "Top", Toast.LENGTH_SHORT).show();
                 }
             });
+
         fm.setButtons(list, top);
         }
 
