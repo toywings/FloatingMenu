@@ -100,10 +100,11 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         params_start.rightMargin = MARGIN;
         params_start.bottomMargin = MARGIN;
 
-        LayoutParams params_dim = getLayoutParamRightBottom();
+        LayoutParams params_dim = getRelativeLayoutParam();
         params_dim.width = 100;
         params_dim.height = 100;
-
+        params_dim.rightMargin = 0;
+        params_dim.bottomMargin = 0;
         GradientDrawable gd = new GradientDrawable();
         gd.setShape(GradientDrawable.OVAL);
         gd.setColor(Color.parseColor("#b3000000"));
@@ -124,8 +125,8 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
         gapX = (START_BUTTON_WIDTH-params_dim.width)/2;
         gapY = (START_BUTTON_HEIGHT-params_dim.height)/2;
-        params_dim.rightMargin = MARGIN + gapX;
-        params_dim.bottomMargin = MARGIN + gapY;
+//        params_dim.rightMargin = MARGIN + gapX;
+//        params_dim.bottomMargin = MARGIN + gapY;
 
         Resources resources = this.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
@@ -409,11 +410,11 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 data.BUTTON.setImageBitmap(data.ICON);
                 }
 
-                LayoutParams param_icon = getLayoutParamRightBottom();
+                LayoutParams param_icon = getRelativeLayoutParam();
 
                 param_icon.width = (int)getResources().getDimension(R.dimen.dp40);
                 param_icon.height = (int)getResources().getDimension(R.dimen.dp40);
-
+                data.BUTTON.setLayoutParams(param_icon);;
 
                 data.BUTTON.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 addView(data.BUTTON);
