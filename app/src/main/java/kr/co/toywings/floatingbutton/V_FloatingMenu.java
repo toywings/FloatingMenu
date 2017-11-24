@@ -1,6 +1,5 @@
 package kr.co.toywings.floatingbutton;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -168,14 +167,16 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         탑버튼_X좌표 = 스타트버튼_X좌표+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
         탑버튼_Y좌표 = 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap;
 
-//        TOP.animate().x(탑버튼_X좌표).y(스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap).setDuration(0).start();
+        TOP.animate().x(탑버튼_X좌표).y(스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap).setDuration(0).start();
 
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", 탑버튼_X좌표);
-        ObjectAnimator translateY = ObjectAnimator.ofFloat(TOP, "translationY", 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap);
-        translateX.setDuration(0);
-        translateY.setDuration(0);
-        translateX.start();
-        translateY.start();
+        TOP.layout(탑버튼_X좌표, 탑버튼_Y좌표, 탑버튼_X좌표 + TOP.getMeasuredWidth(), 탑버튼_Y좌표 + TOP.getMeasuredHeight());
+
+//        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", 탑버튼_X좌표);
+//        ObjectAnimator translateY = ObjectAnimator.ofFloat(TOP, "translationY", 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap);
+//        translateX.setDuration(0);
+//        translateY.setDuration(0);
+//        translateX.start();
+//        translateY.start();
 
         setListeners();
         }
