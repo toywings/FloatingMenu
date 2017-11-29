@@ -54,10 +54,10 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
     public int TOP_ICON_WIDTH;
     public int TOP_ICON_HEIGHT;
     public int NAVIGATION_BAR_HEIGHT;
-    public int 스타트버튼_X좌표;
-    public int 스타트버튼_Y좌표;
-    public int 탑버튼_X좌표;
-    public int 탑버튼_Y좌표;
+    public int START_X;
+    public int START_Y;
+    public int TOP_X;
+    public int TOP_Y;
 
     public V_FloatingMenu(Context context)
         {
@@ -160,19 +160,19 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         addView(DIM);
         addView(TOP);
         addView(START_BUTTON);
-        스타트버튼_X좌표 = SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN;
-//        스타트버튼_Y좌표 = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN-NAVIGATION_BAR_HEIGHT;
-        스타트버튼_Y좌표 = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN;
-        START_BUTTON.animate().x(스타트버튼_X좌표).y(스타트버튼_Y좌표).setDuration(0).start();
-        탑버튼_X좌표 = 스타트버튼_X좌표+((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
-        탑버튼_Y좌표 = 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap;
+        START_X = SCREEN_WIDTH-START_BUTTON_WIDTH-MARGIN;
+//        START_Y = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN-NAVIGATION_BAR_HEIGHT;
+        START_Y = SCREEN_HEIGHT-START_BUTTON_HEIGHT-MARGIN;
+        START_BUTTON.animate().x(START_X).y(START_Y).setDuration(0).start();
+        TOP_X = START_X +((START_BUTTON_WIDTH-TOP_ICON_WIDTH)/2);
+        TOP_Y = START_Y -TOP_ICON_HEIGHT-gap;
 
-        TOP.animate().x(탑버튼_X좌표).y(스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap).setDuration(0).start();
+        TOP.animate().x(TOP_X).y(START_Y -TOP_ICON_HEIGHT-gap).setDuration(0).start();
 
-        TOP.layout(탑버튼_X좌표, 탑버튼_Y좌표, 탑버튼_X좌표 + TOP.getMeasuredWidth(), 탑버튼_Y좌표 + TOP.getMeasuredHeight());
+        TOP.layout(TOP_X, TOP_Y, TOP_X + TOP.getMeasuredWidth(), TOP_Y + TOP.getMeasuredHeight());
 
-//        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", 탑버튼_X좌표);
-//        ObjectAnimator translateY = ObjectAnimator.ofFloat(TOP, "translationY", 스타트버튼_Y좌표-TOP_ICON_HEIGHT-gap);
+//        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", TOP_X);
+//        ObjectAnimator translateY = ObjectAnimator.ofFloat(TOP, "translationY", START_Y-TOP_ICON_HEIGHT-gap);
 //        translateX.setDuration(0);
 //        translateY.setDuration(0);
 //        translateX.start();
@@ -419,9 +419,9 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
 
                 data.BUTTON.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 addView(data.BUTTON);
-//                data.BUTTON.animate().x(탑버튼_X좌표).y(SCREEN_HEIGHT-(스타트버튼_Y좌표 + ((TOP_ICON_HEIGHT+gap) * i))).setDuration(0).start();
+//                data.BUTTON.animate().x(TOP_X).y(SCREEN_HEIGHT-(START_Y + ((TOP_ICON_HEIGHT+gap) * i))).setDuration(0).start();
                 Log.i("####", "#### 스크린 하이트 : "+(START_BUTTON_HEIGHT+MARGIN));
-                data.BUTTON.animate().x(탑버튼_X좌표).y(SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
+                data.BUTTON.animate().x(TOP_X).y(SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
                 Animation anim_show = AnimationUtils.loadAnimation(CONTEXT, R.anim.floating_show);
                 anim_show.setStartOffset(70*i);
                 data.BUTTON.startAnimation(anim_show);
@@ -436,7 +436,7 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
                 labels[i].setGravity(Gravity.RIGHT);
                 labels[i].setLayoutParams(param_label);
                 addView(labels[i]);
-                labels[i].animate().x(탑버튼_X좌표-ditance).y(((TOP_ICON_HEIGHT-labels[i].getMeasuredHeight())/2)+SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
+                labels[i].animate().x(TOP_X -ditance).y(((TOP_ICON_HEIGHT-labels[i].getMeasuredHeight())/2)+SCREEN_HEIGHT-(START_BUTTON_HEIGHT + MARGIN + ((TOP_ICON_HEIGHT+gap) * (i+1)))).setDuration(0).start();
                 labels[i].startAnimation(anim_show);
                 }
 
