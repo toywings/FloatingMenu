@@ -168,7 +168,6 @@ public class V_FloatingMenu extends RelativeLayout implements View.OnTouchListen
         TOP_Y = START_Y -TOP_ICON_HEIGHT-gap;
 
         TOP.animate().x(TOP_X).y(START_Y -TOP_ICON_HEIGHT-gap).setDuration(0).start();
-
         TOP.layout(TOP_X, TOP_Y, TOP_X + TOP.getMeasuredWidth(), TOP_Y + TOP.getMeasuredHeight());
 
 //        ObjectAnimator translateX = ObjectAnimator.ofFloat(TOP, "translationX", TOP_X);
